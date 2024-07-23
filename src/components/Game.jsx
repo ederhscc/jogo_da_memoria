@@ -3,10 +3,9 @@ import Board from "./Board";
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
-    
     const j = Math.floor(Math.random() * (i + 1));
-    
-    [array[i], array[j]] = [array[j], array[i]]
+
+    [array[i], array[j]] = [array[j], array[i]];
   }
 
   return array;
@@ -24,22 +23,29 @@ const generateCards = () => {
     .concat([...cards])
     .map((card, index) => ({ ...card, index }));
 
-  console.log(shuffleArray(duplicatedCards));
+  return shuffleArray(duplicatedCards);
 };
 
 generateCards();
 
 const Game = () => {
+  const [cards, setCards] = useState(generateCards);
+  const [flippedCards, setFlippedCards] = useState([]);
+  const [chances, setChances] = useState(6);
 
-    const [cards, setCards] = useState(generateCards)
-
-    const [flippedCards, setFlippedCards] = useState([])
-
-    const [chances, setChances] = useState(6)
+  const result = cards.filter((card) => card.isFlipped).length;
 
   return (
     <div className="game">
-      <Board />
+      <Board cards={cards} />
+      {chances === 0 ? (
+        <p>Suas tentativas acabaram</p>
+      ) : result === cards.length ? (
+        <h2>Parabéns, você ganhou!</h2>
+      ) : (
+        <p>Você possui {chances} tentativa(s)</p>
+      )}
+      <button className="btn">Reiniciar o jogo</button>
     </div>
   );
 };
